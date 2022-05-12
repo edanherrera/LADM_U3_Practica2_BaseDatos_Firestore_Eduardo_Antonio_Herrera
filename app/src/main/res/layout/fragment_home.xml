@@ -35,6 +35,11 @@
         android:layout_height="wrap_content"
         android:hint="MARCA"
         android:id="@+id/marca" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="KILOMETRAGE"
+        android:id="@+id/kilometrage" />
 
     <Button
         android:layout_width="match_parent"
