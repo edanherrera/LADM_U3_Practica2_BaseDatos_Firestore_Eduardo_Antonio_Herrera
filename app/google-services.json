@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "375818104711",
+    "project_id": "ladmu3practica2tectepiceahg",
+    "storage_bucket": "ladmu3practica2tectepiceahg.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:375818104711:android:a4955cf11ed268d6486d22",
+        "android_client_info": {
+          "package_name": "mx.tecnm.tepic.ladm_u3_practica2_basedatos_firestore_eduardo_herrera_garcia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "375818104711-1nes4f7qcncuodiuglscrstnb5tp4qh1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTDzldUjKF1HJ2AxvbM6PVYYzNXhaOuI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "375818104711-1nes4f7qcncuodiuglscrstnb5tp4qh1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
