@@ -1,57 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="20dp"
-    tools:context=".ui.home.HomeFragment">
-
-
+    tools:context=".ui.home.HomeFragment"
+    android:padding="20dp">
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="NOMBRE"
+        android:textSize="12dp"
         android:id="@+id/nombre" />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="DOMICILIO"
+        android:textSize="12dp"
+        android:layout_below="@id/nombre"
         android:id="@+id/domicilio" />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="LICENCIA COND"
+        android:layout_below="@id/domicilio"
+        android:textSize="12dp"
         android:id="@+id/licencia" />
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="MODELO"
+        android:layout_below="@id/licencia"
+        android:textSize="12dp"
         android:id="@+id/modelo" />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="MARCA"
+        android:layout_below="@id/modelo"
+        android:textSize="12dp"
         android:id="@+id/marca" />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="KILOMETRAGE"
-        android:id="@+id/kilometrage" />
+        android:layout_below="@id/marca"
+        android:textSize="12dp"
+        android:id="@+id/kilometrage"/>
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="145dp"
+        android:layout_height="40dp"
         android:text="INSERTAR"
+        android:textSize="10dp"
+        android:layout_marginRight="30dp"
+        android:layout_below="@id/kilometrage"
         android:id="@+id/insertar" />
+
+    <Button
+        android:layout_width="145dp"
+        android:layout_height="40dp"
+        android:text="CONSULTA(NOM)"
+        android:layout_below="@id/insertar"
+        android:layout_marginRight="30dp"
+        android:textSize="10dp"
+        android:id="@+id/consultano" />
+
+    <Button
+        android:layout_width="145dp"
+        android:layout_height="40dp"
+        android:text="CONSULTA(DOM)"
+        android:layout_toRightOf="@id/consultano"
+        android:layout_below="@id/insertar"
+        android:layout_marginLeft="10dp"
+        android:textSize="10dp"
+        android:id="@+id/consultado" />
+    <Button
+        android:layout_width="145dp"
+        android:layout_height="40dp"
+        android:text="CONSULTA(MOD)"
+        android:layout_below="@id/consultano"
+        android:layout_marginRight="30dp"
+        android:textSize="10dp"
+        android:id="@+id/consultamo" />
+    <Button
+        android:layout_width="145dp"
+        android:layout_height="40dp"
+        android:text="CONSULTA(mar)"
+        android:layout_toRightOf="@id/consultano"
+        android:layout_below="@id/consultano"
+        android:layout_marginLeft="10dp"
+        android:textSize="10dp"
+        android:id="@+id/consultama" />
+
+    <Button
+        android:layout_width="145dp"
+        android:layout_height="40dp"
+        android:text="CONSULTA(LIC)"
+        android:layout_below="@id/kilometrage"
+        android:layout_toRightOf="@id/insertar"
+        android:layout_marginLeft="10dp"
+        android:textSize="10dp"
+        android:id="@+id/consultali" />
 
 
     <ListView
+        android:id="@+id/lista"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/consultama"
+        android:textSize="16dp" />
 
-        android:id="@+id/lista" />
-
-</LinearLayout>
+</RelativeLayout>

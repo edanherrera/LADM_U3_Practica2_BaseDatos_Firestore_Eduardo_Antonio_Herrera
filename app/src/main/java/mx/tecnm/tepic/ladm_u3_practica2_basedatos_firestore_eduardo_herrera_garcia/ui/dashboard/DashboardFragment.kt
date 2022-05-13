@@ -81,27 +81,195 @@ class DashboardFragment : Fragment() {
                 }
             }
         binding.insertar.setOnClickListener {
-            val datos = hashMapOf(
-                "marca" to binding.marca.text.toString(),
-                "modelo" to binding.modelo.text.toString(),
-                "kilometrage" to binding.kilometrage.text.toString().toInt()
-            )
+            if(binding.kilometrage.text.toString() != "" || binding.marca.text.toString() != "" || binding.modelo.text.toString() != "") {
+                val datos = hashMapOf(
+                    "marca" to binding.marca.text.toString(),
+                    "modelo" to binding.modelo.text.toString(),
+                    "kilometrage" to binding.kilometrage.text.toString().toInt()
+                )
 
-            baseRemota.collection("auto")
-                .add(datos)
-                .addOnSuccessListener {
-                    Toast.makeText(this.requireContext(), "EXITO SE INSERTO", Toast.LENGTH_LONG)
-                        .show()
-                }
-                .addOnFailureListener{
-                    AlertDialog.Builder(this.requireContext())
-                        .setMessage(it.message)
-                        .show()
-                }
-            binding.marca.setText("")
-            binding.modelo.setText("")
-            binding.kilometrage.setText("")
+                baseRemota.collection("auto")
+                    .add(datos)
+                    .addOnSuccessListener {
+                        Toast.makeText(this.requireContext(), "EXITO SE INSERTO", Toast.LENGTH_LONG)
+                            .show()
+                    }
+                    .addOnFailureListener {
+                        AlertDialog.Builder(this.requireContext())
+                            .setMessage(it.message)
+                            .show()
+                    }
+                binding.marca.setText("")
+                binding.modelo.setText("")
+                binding.kilometrage.setText("")
+            }else{
+                AlertDialog.Builder(this.requireContext())
+                    .setMessage("CAMPOS VACIOS")
+                    .show()
+            }
         }
+
+        binding.consultamo.setOnClickListener {
+            if (binding.modelo.text.toString() != ""){
+                FirebaseFirestore.getInstance()
+                    .collection("arrendamiento")
+                    .whereEqualTo("modelo", binding.modelo.text.toString())
+                    .addSnapshotListener { query, error ->
+                        if (error != null) {
+                            //SI HUBO ERROR!
+                            AlertDialog.Builder(this.requireContext())
+                                .setMessage(error.message)
+                                .show()
+                            return@addSnapshotListener
+                        }
+
+                        val arreglo = ArrayList<String>()
+                        listaID.clear()
+                        for (documento in query!!) {
+                            var cadena = "Nombre: ${documento.getString("nombre")}\n" +
+                                    "Domicilio:  ${documento.getString("domicilio")} \nModelo: ${
+                                        documento.getString(
+                                            "modelo"
+                                        )
+                                    }\n" +
+                                    "Marca: ${documento.getString("marca")}"
+                            arreglo.add(cadena)
+
+                            listaID.add(documento.id.toString())
+                        }
+
+                        binding.lista.adapter = ArrayAdapter<String>(
+                            this.requireContext(),
+                            R.layout.simple_list_item_1, arreglo
+                        )
+                        binding.lista.setOnItemClickListener { adapterView, view, posicion, l ->
+                            val idSeleccionado = listaID.get(posicion)
+
+                            AlertDialog.Builder(this.requireContext())
+                                .setTitle("ATENCIÓN")
+                                .setMessage("¿Qué deseas hacer con ID: ${idSeleccionado}?")
+                                .setPositiveButton("ELIMINAR") { d, i ->
+                                    eliminar(idSeleccionado)
+                                }
+                                .setNeutralButton("ACTUALIZAR") { d, i ->
+                                    actualizar(idSeleccionado)
+                                }
+                                .setNegativeButton("CANCELAR") { d, i -> }
+                                .show()
+                        }
+                    }
+            }else{
+                AlertDialog.Builder(this.requireContext())
+                    .setMessage("NO SE ENCONTRÓ EL MODELO")
+                    .show()
+            }
+
+        }
+
+        binding.consultama.setOnClickListener {
+            if (binding.marca.text.toString() != "") {
+                FirebaseFirestore.getInstance()
+                    .collection("arrendamiento")
+                    .whereEqualTo("marca", binding.marca.text.toString())
+                    .addSnapshotListener { query, error ->
+                        if (error != null) {
+                            //SI HUBO ERROR!
+                            AlertDialog.Builder(this.requireContext())
+                                .setMessage(error.message)
+                                .show()
+                            return@addSnapshotListener
+                        }
+
+                        val arreglo = ArrayList<String>()
+                        listaID.clear()
+                        for (documento in query!!) {
+                            var cadena = "Nombre: ${documento.getString("nombre")}\n" +
+                                    "Domicilio:  ${documento.getString("domicilio")} \nModelo: ${
+                                        documento.getString(
+                                            "modelo"
+                                        )
+                                    }\n" +
+                                    "Marca: ${documento.getString("marca")}"
+                            arreglo.add(cadena)
+
+                            listaID.add(documento.id.toString())
+                        }
+
+                        binding.lista.adapter = ArrayAdapter<String>(
+                            this.requireContext(),
+                            R.layout.simple_list_item_1, arreglo
+                        )
+                        binding.lista.setOnItemClickListener { adapterView, view, posicion, l ->
+                            val idSeleccionado = listaID.get(posicion)
+
+                            AlertDialog.Builder(this.requireContext())
+                                .setTitle("ATENCIÓN")
+                                .setMessage("¿Qué deseas hacer con ID: ${idSeleccionado}?")
+                                .setPositiveButton("ELIMINAR") { d, i ->
+                                    eliminar(idSeleccionado)
+                                }
+                                .setNeutralButton("ACTUALIZAR") { d, i ->
+                                    actualizar(idSeleccionado)
+                                }
+                                .setNegativeButton("CANCELAR") { d, i -> }
+                                .show()
+                        }
+                    }
+            }else{
+                AlertDialog.Builder(this.requireContext())
+                    .setMessage("NO SE ENCONTRÓ LA MARCA")
+                    .show()
+            }
+        }
+
+        binding.consultaki.setOnClickListener{
+            if (binding.kilometrage.text.toString() != "") {
+                FirebaseFirestore.getInstance()
+                    .collection("auto")
+                    .whereEqualTo("kilometrage",binding.kilometrage.text.toString().toInt())
+                    .addSnapshotListener { query, error ->
+                        if (error!=null){
+                            //SI HUBO ERROR!
+                            AlertDialog.Builder(this.requireContext())
+                                .setMessage(error.message)
+                                .show()
+                            return@addSnapshotListener
+                        }
+                        val arreglo = ArrayList<String>()
+                        listaID.clear()
+                        for (documento in query!!){
+                            var cadena = "Marca: ${documento.getString("marca")}\n" +
+                                    "Modelo:  ${documento.getString("modelo")} \nKilometrage: ${documento.getLong("kilometrage")}"
+                            arreglo.add(cadena)
+
+                            listaID.add(documento.id.toString())
+                        }
+
+                        binding.lista.adapter= ArrayAdapter<String>(this.requireContext(),
+                            R.layout.simple_list_item_1, arreglo)
+                        binding.lista.setOnItemClickListener { adapterView, view, posicion, l ->
+                            val idSeleccionado = listaID.get(posicion)
+
+                            AlertDialog.Builder(this.requireContext())
+                                .setTitle("ATENCIÓN")
+                                .setMessage("¿Qué deseas hacer con ID: ${idSeleccionado}?")
+                                .setPositiveButton("ELIMINAR"){d, i->
+                                    eliminar(idSeleccionado)
+                                }
+                                .setNeutralButton("ACTUALIZAR"){d, i->
+                                    actualizar(idSeleccionado)
+                                }
+                                .setNegativeButton("CANCELAR"){d, i->}
+                                .show()
+                        }
+                    }
+            }else{
+                AlertDialog.Builder(this.requireContext())
+                    .setMessage("NO SE ENCONTRÓ EL KILOMETRAGE")
+                    .show()
+            }
+        }
+
         return root
     }
 

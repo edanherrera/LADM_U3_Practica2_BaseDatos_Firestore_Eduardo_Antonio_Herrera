@@ -25,17 +25,43 @@
         android:layout_height="wrap_content"
         android:hint="KILOMETRAGE"
         android:id="@+id/kilometrage" />
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="INSERTAR"
-        android:id="@+id/insertar" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="CONSULTA(MODELO/MARCA/KILOMETRAGE)"
-        android:id="@+id/consulta" />
+        <Button
+            android:layout_width="145dp"
+            android:layout_height="40dp"
+            android:text="INSERTAR"
+            android:textSize="10dp"
+            android:layout_marginRight="30dp"
+            android:id="@+id/insertar" />
+
+        <Button
+            android:layout_width="145dp"
+            android:layout_height="40dp"
+            android:text="CONSULTA(MOD)"
+            android:textSize="10dp"
+            android:layout_marginRight="30dp"
+            android:layout_below="@id/insertar"
+            android:id="@+id/consultamo" />
+        <Button
+            android:layout_width="145dp"
+            android:layout_height="40dp"
+            android:text="CONSULTA(MAR)"
+            android:textSize="10dp"
+            android:layout_below="@id/insertar"
+            android:layout_toRightOf="@id/consultamo"
+            android:id="@+id/consultama" />
+        <Button
+            android:layout_width="145dp"
+            android:layout_height="40dp"
+            android:text="CONSULTA(KMG)"
+            android:textSize="10dp"
+            android:layout_toRightOf="@id/insertar"
+            android:id="@+id/consultaki" />
+    </RelativeLayout>
+
 
     <ListView
         android:layout_width="match_parent"

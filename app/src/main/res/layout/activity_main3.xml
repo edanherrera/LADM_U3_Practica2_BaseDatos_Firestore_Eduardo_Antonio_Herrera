@@ -28,6 +28,13 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="FECHA"
+        android:layout_below="@id/licencia"
+        android:textSize="12dp"
+        android:id="@+id/fecha" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:hint="MODELO"
         android:id="@+id/modelo" />
     <EditText

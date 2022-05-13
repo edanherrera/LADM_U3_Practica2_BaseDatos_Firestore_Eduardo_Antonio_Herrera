@@ -28,6 +28,7 @@ class MainActivity3 : AppCompatActivity() {
                 binding.licencia.setText(it.getString("licencia"))
                 binding.modelo.setText(it.getString("modelo"))
                 binding.marca.setText(it.getString("marca"))
+                binding.fecha.setText(it.getString("fecha"))
                 binding.kilometrage.setText(it.getLong("kilometrage").toString())
             }
             .addOnFailureListener{
@@ -66,6 +67,7 @@ class MainActivity3 : AppCompatActivity() {
                             .update("nombre",binding.nombre.text.toString(),
                                 "domicilio",binding.domicilio.text.toString(),
                                 "licencia",binding.licencia.text.toString(),
+                                "fecha",binding.fecha.text.toString(),
                                 "marca" , binding.marca.text.toString(),
                                 "modelo" , binding.modelo.text.toString(),
                                 "kilometrage" , binding.kilometrage.text.toString().toInt()
@@ -84,6 +86,7 @@ class MainActivity3 : AppCompatActivity() {
                         binding.licencia.setText("")
                         binding.marca.setText("")
                         binding.modelo.setText("")
+                        binding.fecha.setText("")
                         binding.kilometrage.setText("")
                     }
                 }

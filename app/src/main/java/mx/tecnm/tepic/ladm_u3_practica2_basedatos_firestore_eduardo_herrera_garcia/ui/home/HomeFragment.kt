@@ -16,6 +16,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import mx.tecnm.tepic.ladm_u3_practica2_basedatos_firestore_eduardo_herrera_garcia.MainActivity2
 import mx.tecnm.tepic.ladm_u3_practica2_basedatos_firestore_eduardo_herrera_garcia.MainActivity3
 import mx.tecnm.tepic.ladm_u3_practica2_basedatos_firestore_eduardo_herrera_garcia.databinding.FragmentHomeBinding
+import java.time.Instant
+import java.time.ZoneId
 
 class HomeFragment : Fragment() {
 
@@ -54,7 +56,7 @@ class HomeFragment : Fragment() {
                 for (documento in query!!){
                     var cadena = "Nombre: ${documento.getString("nombre")}\n" +
                             "Domicilio:  ${documento.getString("domicilio")} \nModelo: ${documento.getString("modelo")}\n" +
-                            "Marca: ${documento.getString("marca")}"
+                            "Marca: ${documento.getString("marca")} \nFecha: ${documento.getString("fecha")}"
                     arreglo.add(cadena)
 
                     listaID.add(documento.id.toString())
@@ -81,6 +83,8 @@ class HomeFragment : Fragment() {
 
         binding.insertar.setOnClickListener {
             //---------------------------------------------------CONSULTAAAAAAAAAAA---------------------------------
+            if(binding.kilometrage.text.toString() != "" || binding.marca.text.toString() != "" || binding.modelo.text.toString() != "" || binding.domicilio.text.toString() !="" ||
+                binding.nombre.text.toString() !="" || binding.licencia.text.toString() !="") {
             baseRemota.collection("auto")
                 .whereEqualTo("marca",binding.marca.text.toString())
                 .whereEqualTo("modelo",binding.modelo.text.toString())
@@ -101,10 +105,15 @@ class HomeFragment : Fragment() {
                             Toast.makeText(this.requireContext(), "El modelo o marca no existe", Toast.LENGTH_LONG)
                                 .show()
                         }else{
+                            var fechaA= Instant.now()
+                            val fec = fechaA.atZone(ZoneId.of("America/Mazatlan")).toString()
+                            val split = fec.split("T")
+                            val fecha = split[0]
                             val datos = hashMapOf(
                                 "nombre" to binding.nombre.text.toString(),
                                 "domicilio" to binding.domicilio.text.toString(),
                                 "licencia" to binding.licencia.text.toString(),
+                                "fecha" to fecha,
                                 "marca" to binding.marca.text.toString(),
                                 "modelo" to binding.modelo.text.toString(),
                                 "kilometrage" to binding.kilometrage.text.toString().toInt()
@@ -133,8 +142,274 @@ class HomeFragment : Fragment() {
                             binding.kilometrage.setText("")
                         }
                 }
+            }else{
+                AlertDialog.Builder(this.requireContext())
+                    .setMessage("CAMPOS VACIOS")
+                    .show()
+            }
             //Toast.makeText(this.requireContext(), "SE ENCONTRÓ EL DOC ${consul}", Toast.LENGTH_LONG)
               //  .show()
+        }
+
+        binding.consultamo.setOnClickListener {
+            if (binding.modelo.text.toString() != ""){
+                FirebaseFirestore.getInstance()
+                    .collection("arrendamiento")
+                    .whereEqualTo("modelo", binding.modelo.text.toString())
+                    .addSnapshotListener { query, error ->
+                        if (error != null) {
+                            //SI HUBO ERROR!
+                            AlertDialog.Builder(this.requireContext())
+                                .setMessage(error.message)
+                                .show()
+                            return@addSnapshotListener
+                        }
+
+                        val arreglo = ArrayList<String>()
+                        listaID.clear()
+                        for (documento in query!!) {
+                            var cadena = "Nombre: ${documento.getString("nombre")}\n" +
+                                    "Domicilio:  ${documento.getString("domicilio")} \nModelo: ${documento.getString("modelo")}\n" +
+                                    "Marca: ${documento.getString("marca")} \nFecha: ${documento.getString("fecha")}"
+                            arreglo.add(cadena)
+
+                            listaID.add(documento.id.toString())
+                        }
+
+                        binding.lista.adapter = ArrayAdapter<String>(
+                            this.requireContext(),
+                            R.layout.simple_list_item_1, arreglo
+                        )
+                        binding.lista.setOnItemClickListener { adapterView, view, posicion, l ->
+                            val idSeleccionado = listaID.get(posicion)
+
+                            AlertDialog.Builder(this.requireContext())
+                                .setTitle("ATENCIÓN")
+                                .setMessage("¿Qué deseas hacer con ID: ${idSeleccionado}?")
+                                .setPositiveButton("ELIMINAR") { d, i ->
+                                    eliminar(idSeleccionado)
+                                }
+                                .setNeutralButton("ACTUALIZAR") { d, i ->
+                                    actualizar(idSeleccionado)
+                                }
+                                .setNegativeButton("CANCELAR") { d, i -> }
+                                .show()
+                        }
+                    }
+            }else{
+                AlertDialog.Builder(this.requireContext())
+                    .setMessage("NO SE ENCONTRÓ EL MODELO")
+                    .show()
+            }
+        }
+
+        binding.consultama.setOnClickListener {
+            if (binding.marca.text.toString() != "") {
+                FirebaseFirestore.getInstance()
+                    .collection("arrendamiento")
+                    .whereEqualTo("marca", binding.marca.text.toString())
+                    .addSnapshotListener { query, error ->
+                        if (error != null) {
+                            //SI HUBO ERROR!
+                            AlertDialog.Builder(this.requireContext())
+                                .setMessage(error.message)
+                                .show()
+                            return@addSnapshotListener
+                        }
+
+                        val arreglo = ArrayList<String>()
+                        listaID.clear()
+                        for (documento in query!!) {
+                            var cadena = "Nombre: ${documento.getString("nombre")}\n" +
+                                    "Domicilio:  ${documento.getString("domicilio")} \nModelo: ${documento.getString("modelo")}\n" +
+                                    "Marca: ${documento.getString("marca")} \nFecha: ${documento.getString("fecha")}"
+                            arreglo.add(cadena)
+
+                            listaID.add(documento.id.toString())
+                        }
+
+                        binding.lista.adapter = ArrayAdapter<String>(
+                            this.requireContext(),
+                            R.layout.simple_list_item_1, arreglo
+                        )
+                        binding.lista.setOnItemClickListener { adapterView, view, posicion, l ->
+                            val idSeleccionado = listaID.get(posicion)
+
+                            AlertDialog.Builder(this.requireContext())
+                                .setTitle("ATENCIÓN")
+                                .setMessage("¿Qué deseas hacer con ID: ${idSeleccionado}?")
+                                .setPositiveButton("ELIMINAR") { d, i ->
+                                    eliminar(idSeleccionado)
+                                }
+                                .setNeutralButton("ACTUALIZAR") { d, i ->
+                                    actualizar(idSeleccionado)
+                                }
+                                .setNegativeButton("CANCELAR") { d, i -> }
+                                .show()
+                        }
+                    }
+            }else{
+                AlertDialog.Builder(this.requireContext())
+                    .setMessage("NO SE ENCONTRÓ LA MARCA")
+                    .show()
+            }
+        }
+
+        binding.consultano.setOnClickListener {
+            if (binding.nombre.text.toString() != "") {
+                FirebaseFirestore.getInstance()
+                    .collection("arrendamiento")
+                    .whereEqualTo("nombre", binding.nombre.text.toString())
+                    .addSnapshotListener { query, error ->
+                        if (error != null) {
+                            //SI HUBO ERROR!
+                            AlertDialog.Builder(this.requireContext())
+                                .setMessage(error.message)
+                                .show()
+                            return@addSnapshotListener
+                        }
+
+                        val arreglo = ArrayList<String>()
+                        listaID.clear()
+                        for (documento in query!!) {
+                            var cadena = "Nombre: ${documento.getString("nombre")}\n" +
+                                    "Domicilio:  ${documento.getString("domicilio")} \nModelo: ${documento.getString("modelo")}\n" +
+                                    "Marca: ${documento.getString("marca")} \nFecha: ${documento.getString("fecha")}"
+                            arreglo.add(cadena)
+
+                            listaID.add(documento.id.toString())
+                        }
+
+                        binding.lista.adapter = ArrayAdapter<String>(
+                            this.requireContext(),
+                            R.layout.simple_list_item_1, arreglo
+                        )
+                        binding.lista.setOnItemClickListener { adapterView, view, posicion, l ->
+                            val idSeleccionado = listaID.get(posicion)
+
+                            AlertDialog.Builder(this.requireContext())
+                                .setTitle("ATENCIÓN")
+                                .setMessage("¿Qué deseas hacer con ID: ${idSeleccionado}?")
+                                .setPositiveButton("ELIMINAR") { d, i ->
+                                    eliminar(idSeleccionado)
+                                }
+                                .setNeutralButton("ACTUALIZAR") { d, i ->
+                                    actualizar(idSeleccionado)
+                                }
+                                .setNegativeButton("CANCELAR") { d, i -> }
+                                .show()
+                        }
+
+                    }
+            }else{
+                AlertDialog.Builder(this.requireContext())
+                    .setMessage("NO SE ENCONTRÓ EL NOMBRE")
+                    .show()
+            }
+        }
+
+        binding.consultado.setOnClickListener {
+            if (binding.domicilio.text.toString() != "") {
+                FirebaseFirestore.getInstance()
+                    .collection("arrendamiento")
+                    .whereEqualTo("domicilio", binding.domicilio.text.toString())
+                    .addSnapshotListener { query, error ->
+                        if (error != null) {
+                            //SI HUBO ERROR!
+                            AlertDialog.Builder(this.requireContext())
+                                .setMessage(error.message)
+                                .show()
+                            return@addSnapshotListener
+                        }
+
+                        val arreglo = ArrayList<String>()
+                        listaID.clear()
+                        for (documento in query!!) {
+                            var cadena = "Nombre: ${documento.getString("nombre")}\n" +
+                                    "Domicilio:  ${documento.getString("domicilio")} \nModelo: ${documento.getString("modelo")}\n" +
+                                    "Marca: ${documento.getString("marca")}  \nFecha: ${documento.getString("fecha")}"
+                            arreglo.add(cadena)
+
+                            listaID.add(documento.id.toString())
+                        }
+
+                        binding.lista.adapter = ArrayAdapter<String>(
+                            this.requireContext(),
+                            R.layout.simple_list_item_1, arreglo
+                        )
+                        binding.lista.setOnItemClickListener { adapterView, view, posicion, l ->
+                            val idSeleccionado = listaID.get(posicion)
+
+                            AlertDialog.Builder(this.requireContext())
+                                .setTitle("ATENCIÓN")
+                                .setMessage("¿Qué deseas hacer con ID: ${idSeleccionado}?")
+                                .setPositiveButton("ELIMINAR") { d, i ->
+                                    eliminar(idSeleccionado)
+                                }
+                                .setNeutralButton("ACTUALIZAR") { d, i ->
+                                    actualizar(idSeleccionado)
+                                }
+                                .setNegativeButton("CANCELAR") { d, i -> }
+                                .show()
+                        }
+                    }
+            }else{
+                AlertDialog.Builder(this.requireContext())
+                    .setMessage("NO SE ENCONTRÓ EL DOMICILIO")
+                    .show()
+            }
+        }
+
+        binding.consultali.setOnClickListener {
+            if (binding.licencia.text.toString() != "") {
+                FirebaseFirestore.getInstance()
+                    .collection("arrendamiento")
+                    .whereEqualTo("licencia", binding.marca.text.toString())
+                    .addSnapshotListener { query, error ->
+                        if (error != null) {
+                            //SI HUBO ERROR!
+                            AlertDialog.Builder(this.requireContext())
+                                .setMessage(error.message)
+                                .show()
+                            return@addSnapshotListener
+                        }
+
+                        val arreglo = ArrayList<String>()
+                        listaID.clear()
+                        for (documento in query!!) {
+                            var cadena = "Nombre: ${documento.getString("nombre")}\n" +
+                                    "Domicilio:  ${documento.getString("domicilio")} \nModelo: ${documento.getString("modelo")}\n" +
+                                    "Marca: ${documento.getString("marca")} \n Fecha: ${documento.getString("fecha")}"
+                            arreglo.add(cadena)
+
+                            listaID.add(documento.id.toString())
+                        }
+
+                        binding.lista.adapter = ArrayAdapter<String>(
+                            this.requireContext(),
+                            R.layout.simple_list_item_1, arreglo
+                        )
+                        binding.lista.setOnItemClickListener { adapterView, view, posicion, l ->
+                            val idSeleccionado = listaID.get(posicion)
+
+                            AlertDialog.Builder(this.requireContext())
+                                .setTitle("ATENCIÓN")
+                                .setMessage("¿Qué deseas hacer con ID: ${idSeleccionado}?")
+                                .setPositiveButton("ELIMINAR") { d, i ->
+                                    eliminar(idSeleccionado)
+                                }
+                                .setNeutralButton("ACTUALIZAR") { d, i ->
+                                    actualizar(idSeleccionado)
+                                }
+                                .setNegativeButton("CANCELAR") { d, i -> }
+                                .show()
+                        }
+                    }
+            }else{
+                AlertDialog.Builder(this.requireContext())
+                    .setMessage("NO SE ENCONTRÓ LA LICENCIA")
+                    .show()
+            }
         }
 /*
         val textView: TextView = binding.textHome
