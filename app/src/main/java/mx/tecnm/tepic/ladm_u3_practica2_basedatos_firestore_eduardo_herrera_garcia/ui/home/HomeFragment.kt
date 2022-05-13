@@ -364,7 +364,7 @@ class HomeFragment : Fragment() {
             if (binding.licencia.text.toString() != "") {
                 FirebaseFirestore.getInstance()
                     .collection("arrendamiento")
-                    .whereEqualTo("licencia", binding.marca.text.toString())
+                    .whereEqualTo("licencia", binding.licencia.text.toString())
                     .addSnapshotListener { query, error ->
                         if (error != null) {
                             //SI HUBO ERROR!
